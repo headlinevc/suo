@@ -9,7 +9,7 @@ module Suo
       end
 
       def clear
-        with { |r| r.del(@key) }
+        with { |r| $redis.del(@key) }
       end
 
       private
@@ -23,12 +23,12 @@ module Suo
       end
 
       def get
-        [with { |r| r.get(@key) }, nil]
+        [with { |r| $redis.get(@key) }, nil]
       end
 
       def set(newval, _, expire: false)
         ret = with do |r|
-          r.multi do |rr|
+          $redis.multi do |rr|
             if expire
               rr.setex(@key, @options[:ttl], newval)
             else
@@ -41,9 +41,9 @@ module Suo
       end
 
       def synchronize
-        with { |r| r.watch(@key) { yield } }
+        with { |r| $redis.watch(@key) { yield } }
       ensure
-        with { |r| r.unwatch }
+        with { |r| $redis.unwatch }
       end
 
       def initial_set(val = BLANK_STR)
