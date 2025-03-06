@@ -2,7 +2,8 @@ require "securerandom"
 require "monitor"
 
 require "dalli"
-require "dalli/cas/client"
+# The following line is no longer needed as this code has been rolled into the standard 'dalli/client'
+# require "dalli/cas/client" 
 
 require "redis"
 
